@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        if (! Schema::hasTable('organizations')) {
+            return;
+        }
+
+        if (! Schema::hasColumn('users', 'organization_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->unsignedBigInteger('organization_id')->nullable()->after('id');
+            });
+        }
+    }
+
+    public function down(): void
+    {
+        if (Schema::hasColumn('users', 'organization_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('organization_id');
+            });
+        }
+    }
+};
